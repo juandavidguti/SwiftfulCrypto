@@ -9,9 +9,16 @@ import SwiftUI
 
 @main
 struct SwiftfulCryptoApp: App {
+    
+    @StateObject private var vm = HomeViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationStack{
+                HomeView()
+                    .toolbar(.hidden)
+            }
+            .environmentObject(vm)
         }
     }
 }
