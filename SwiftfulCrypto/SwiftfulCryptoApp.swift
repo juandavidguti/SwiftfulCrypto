@@ -11,6 +11,7 @@ import SwiftUI
 struct SwiftfulCryptoApp: App {
     
     @StateObject private var vm = HomeViewModel()
+    @State private var showLaunchView: Bool = true
     
     // change colors of navigation titles
     init(){
@@ -21,11 +22,21 @@ struct SwiftfulCryptoApp: App {
     
     var body: some Scene {
         WindowGroup {
-            NavigationStack{
-                HomeView()
-                    .toolbar(.hidden)
+            ZStack {
+                NavigationStack{
+                    HomeView()
+                        .toolbar(.hidden)
+                }
+                .environmentObject(vm)
+                
+                ZStack {
+                    if showLaunchView {
+                        LaunchView(showLaunchView: $showLaunchView)
+                            .transition(.move(edge: .leading))
+                    }
+                }
+                .zIndex(2.0)
             }
-            .environmentObject(vm)
         }
     }
 }
