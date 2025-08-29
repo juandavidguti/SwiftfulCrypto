@@ -21,34 +21,32 @@ struct HomeView: View {
             // background layer
             Color.theme.background
                 .ignoresSafeArea()
-                .sheet(isPresented: $showPortfolioView) {
-                    PortfolioView()
-                        .environmentObject(vm)
-                }
             
             // content layer
             VStack {
                 homeHeader
-                
                 HomeStatsView(showPortfolio: $showPorfolio)
-                
                 SearchBarView(searchText: $vm.searchText)
-                
                 columnTitles
-                
+
                 if !showPorfolio {
                     allCoinsList
-                    .transition(.move(edge: .leading))
+                        .transition(.move(edge: .leading))
                 }
                 if showPorfolio {
                     portfolioCoinList
                         .transition(.move(edge: .trailing))
                 }
+
                 Spacer(minLength: 0)
             }
-            .sheet(isPresented: $showSettingsView) {
-                SettingsView()
-            }
+        }
+        .sheet(isPresented: $showPortfolioView) {
+            PortfolioView()
+                .environmentObject(vm)
+        }
+        .sheet(isPresented: $showSettingsView) {
+            SettingsView()
         }
         
         .background(
@@ -109,49 +107,28 @@ extension HomeView {
         List {
             ForEach(vm.allCoins) { coin in
                 CoinRowView(coin: coin, showHoldingsColumn: false)
-                    .listRowInsets(
-                        .init(
-                            top: 10,
-                            leading: 0,
-                            bottom: 10,
-                            trailing: 10
-                        )
-                    )
-                    .onTapGesture {
-                        segue(coin: coin)
-                    }
-            }
-        }
-        .refreshable {
-            withAnimation(.linear) {
-                vm.reloadData()
+                    .listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 10))
+                    .onTapGesture { segue(coin: coin) }
             }
         }
         .listStyle(.plain)
+        .scrollContentBackground(.hidden)  // 👈 quita el fondo propio
+        .background(Color.clear)           // 👈 asegura transparencia
+        .refreshable { withAnimation(.linear) { vm.reloadData() } }
     }
+
     private var portfolioCoinList: some View {
         List {
             ForEach(vm.portfolioCoins) { coin in
                 CoinRowView(coin: coin, showHoldingsColumn: true)
-                    .listRowInsets(
-                        .init(
-                            top: 10,
-                            leading: 0,
-                            bottom: 10,
-                            trailing: 10
-                        )
-                    )
-                    .onTapGesture {
-                        segue(coin: coin)
-                    }
-            }
-        }
-        .refreshable {
-            withAnimation(.linear) {
-                vm.reloadData()
+                    .listRowInsets(.init(top: 10, leading: 0, bottom: 10, trailing: 10))
+                    .onTapGesture { segue(coin: coin) }
             }
         }
         .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(Color.clear)
+        .refreshable { withAnimation(.linear) { vm.reloadData() } }
     }
     
     private func segue(coin: CoinModel) {

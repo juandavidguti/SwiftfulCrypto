@@ -23,19 +23,20 @@ struct SwiftfulCryptoApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack {
-                NavigationStack{
+                // Fondo maestro de TODA la app
+                Color.theme.background   // o .black mientras pruebas
+                    .ignoresSafeArea()
+
+                NavigationStack {
                     HomeView()
                         .toolbar(.hidden)
                 }
                 .environmentObject(vm)
-                
-                ZStack {
-                    if showLaunchView {
-                        LaunchView(showLaunchView: $showLaunchView)
-                            .transition(.move(edge: .leading))
-                    }
+                if showLaunchView {
+                    LaunchView(showLaunchView: $showLaunchView)
+                        .transition(.move(edge: .leading))
+                        .zIndex(1)
                 }
-                .zIndex(2.0)
             }
         }
     }

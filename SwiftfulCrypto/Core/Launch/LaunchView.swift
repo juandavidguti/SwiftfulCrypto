@@ -59,8 +59,6 @@ struct LaunchView: View {
                 } else {
                     counter += 1
                 }
-                
-                counter += 1
             }
         }
     }
